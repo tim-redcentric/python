@@ -61,7 +61,7 @@ try:
 except Exception as e:
     print(f"Error creating login profile: {e}")
 
-# Wait for a while to allow login profile creation to complete
+# Wait for a short while to allow login profile creation to complete
 print("Processing... ", end='', flush=True)
 
 for _ in range(12):
