@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# tim samanchi - RedcentricPLC
+# Tim Samanchi - RedcentricPLC
 # 17/08/2023
 
 import boto3
@@ -10,6 +10,11 @@ import datetime
 import time
 import sys
 
+# Change the values for the variables below to match your requirements
+new_username = 'test.user@somedomain.com'
+group_name = 'twc-readonly'
+
+# Progress indicator as spinning cursor 
 def spinning_cursor():
     while True:
         for cursor in '|/-\\':
@@ -20,9 +25,6 @@ spinner = spinning_cursor()
 iam_client = boto3.client('iam')
 session = boto3.session.Session()
 now = datetime.datetime.now()
-
-new_username = 'test.user@somedomain.com'
-group_name = 'my-test-group'
 
 # Create a new IAM user: new_username
 try:
@@ -40,7 +42,17 @@ except Exception as e:
 
 # Generate a random password
 password_length = 18
-password = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(password_length))
+
+# Include symbols in the character pool for the generic password
+characters = string.ascii_letters + string.digits + string.punctuation
+
+# Generate the password without a symbol initially
+password = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(password_length - 1))
+
+# Add a randomly generated symbol to the password
+symbol = random.choice(string.punctuation)
+position = random.randint(0, password_length - 1)
+password = password[:position] + symbol + password[position:]
 
 # Create login profile for console access
 try:
@@ -52,7 +64,7 @@ except Exception as e:
 # Wait for a while to allow login profile creation to complete
 print("Processing... ", end='', flush=True)
 
-for _ in range(15):
+for _ in range(12):
     sys.stdout.write(next(spinner))
     sys.stdout.flush()
     time.sleep(1)
